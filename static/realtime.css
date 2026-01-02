@@ -1,0 +1,29 @@
+/* Real-time Data Styles */
+.realtime-data {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.data-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    background: rgba(0, 0, 0, 0.2);
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--bg-primary);
+}
+
+.data-icon {
+    font-size: 1.2rem;
+}
+
+.gold-price-value {
+    font-weight: 700;
+    color: var(--bg-primary);
+}

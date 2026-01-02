@@ -148,6 +148,10 @@
                 // Remove typing indicator
                 removeTypingIndicator(typingId);
 
+                if (!response.ok || !data.response) {
+                    throw new Error(data.detail || 'Failed to get response');
+                }
+
                 // Add AI response to chat
                 addMessage(data.response, 'ai');
 
@@ -158,7 +162,7 @@
 
             } catch (error) {
                 removeTypingIndicator(typingId);
-                addMessage('Sorry, I encountered an error. Please try again.', 'ai');
+                addMessage(`Sorry, I encountered an error: ${error.message || 'Please try again.'}`, 'ai');
                 console.error('Error:', error);
             }
         });

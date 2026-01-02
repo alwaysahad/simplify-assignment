@@ -41,14 +41,18 @@ async def chat(chat_request: ChatRequest):
         # Get AI response from Gemini
         ai_response = gemini_service.get_response(chat_request.message)
         
-        # Store chat history in MongoDB
-        chat_message = ChatMessage(
-            user_message=chat_request.message,
-            ai_response=ai_response
-        )
-        
-        chat_collection = get_chat_history_collection()
-        chat_collection.insert_one(chat_message.model_dump())
+        # Store chat history in MongoDB (Non-blocking)
+        try:
+            chat_message = ChatMessage(
+                user_message=chat_request.message,
+                ai_response=ai_response
+            )
+            
+            chat_collection = get_chat_history_collection()
+            chat_collection.insert_one(chat_message.model_dump())
+        except Exception as db_error:
+            # Log DB error but don't fail the request
+            print(f"Database error (running without history): {db_error}")
         
         return JSONResponse({
             "response": ai_response,
@@ -56,6 +60,7 @@ async def chat(chat_request: ChatRequest):
         })
         
     except Exception as e:
+        print(f"Chat error: {e}")
         raise HTTPException(status_code=500, detail=f"Error processing chat: {str(e)}")
 
 

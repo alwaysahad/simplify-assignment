@@ -22,10 +22,6 @@
                 <p class="tagline">Your Digital Gold Investment Assistant</p>
                 <div class="realtime-data">
                     <div class="data-item">
-                        <span class="data-icon">📅</span>
-                        <span id="currentDateTime">Loading...</span>
-                    </div>
-                    <div class="data-item">
                         <span class="data-icon">💰</span>
                         <span>24K Gold: </span>
                         <span id="goldPrice" class="gold-price-value">Loading...</span>
@@ -77,23 +73,6 @@
         const purchaseButton = document.getElementById('purchaseButton');
         const welcomeMessage = document.querySelector('.welcome-message');
 
-        // Update date and time
-        function updateDateTime() {
-            const now = new Date();
-            const options = {
-                weekday: 'short',
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true
-            };
-            const dateTimeStr = now.toLocaleString('en-IN', options);
-            document.getElementById('currentDateTime').textContent = dateTimeStr;
-        }
-
         // Fetch gold price
         async function updateGoldPrice() {
             try {
@@ -109,9 +88,7 @@
         }
 
         // Initialize real-time data
-        updateDateTime();
         updateGoldPrice();
-        setInterval(updateDateTime, 1000); // Update every second
         setInterval(updateGoldPrice, 30000); // Update every 30 seconds
 
 

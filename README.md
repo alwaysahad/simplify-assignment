@@ -119,6 +119,51 @@ kuberi-gold-app/
 - `MONGODB_URL`: MongoDB connection URL (default: `mongodb://localhost:27017/`)
 - `DATABASE_NAME`: Database name (default: `kuberi_gold`)
 
+## MongoDB Atlas Setup (Required for Data Persistence)
+
+To store transactions and chat history, set up a free MongoDB Atlas cluster:
+
+### 1. Create MongoDB Atlas Account
+- Go to [mongodb.com/atlas](https://www.mongodb.com/atlas) and sign up (free)
+- Create a new **Shared Cluster** (free tier)
+
+### 2. Configure Database Access
+- Go to **Database Access** → **Add New Database User**
+- Create username and password (save these!)
+- Set privileges to **"Read and write to any database"**
+
+### 3. Configure Network Access
+- Go to **Network Access** → **Add IP Address**
+- Click **"Allow Access from Anywhere"** (adds `0.0.0.0/0`)
+
+### 4. Get Connection String
+- Go to **Database** → Click **Connect** → **"Connect your application"**
+- Copy the connection string:
+  ```
+  mongodb+srv://username:<password>@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority
+  ```
+- Replace `<password>` with your actual password
+
+## Docker Hub
+
+Pull and run the pre-built image from Docker Hub:
+
+```bash
+# Pull the image
+docker pull alwaysahad/kuberi-gold-app:latest
+
+# Run the container (with MongoDB for data persistence)
+docker run -d -p 8000:8000 \
+  -e GEMINI_API_KEY=your_gemini_api_key \
+  -e MONGODB_URL="mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority" \
+  -e DATABASE_NAME=kuberi_gold \
+  alwaysahad/kuberi-gold-app
+```
+
+Then open http://localhost:8000 in your browser.
+
+> **Note:** Replace `your_gemini_api_key` and the MongoDB connection string with your actual credentials.
+
 ## Development
 
 To run in development mode with auto-reload:

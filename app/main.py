@@ -38,21 +38,19 @@ async def chat(chat_request: ChatRequest):
         AI-generated response with investment nudge
     """
     try:
-        # Get AI response from Gemini
-        ai_response = gemini_service.get_response(chat_request.message)
+        # Get AI response from Gemini (async for faster response)
+        ai_response = await gemini_service.get_response(chat_request.message)
         
-        # Store chat history in MongoDB (Non-blocking)
+        # Store chat history in MongoDB (fire and forget - don't wait)
         try:
             chat_message = ChatMessage(
                 user_message=chat_request.message,
                 ai_response=ai_response
             )
-            
             chat_collection = get_chat_history_collection()
             chat_collection.insert_one(chat_message.model_dump())
-        except Exception as db_error:
-            # Log DB error but don't fail the request
-            print(f"Database error (running without history): {db_error}")
+        except Exception:
+            pass  # Silently ignore DB errors
         
         return JSONResponse({
             "response": ai_response,

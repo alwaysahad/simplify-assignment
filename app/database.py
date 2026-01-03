@@ -19,7 +19,8 @@ def _get_client():
     """Get or create MongoDB client (lazy initialization)."""
     global _client
     if _client is None:
-        _client = MongoClient(MONGODB_URL, serverSelectionTimeoutMS=5000)
+        # Short timeout to fail fast if MongoDB unavailable
+        _client = MongoClient(MONGODB_URL, serverSelectionTimeoutMS=2000)
     return _client
 
 

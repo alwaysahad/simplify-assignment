@@ -10,25 +10,32 @@ load_dotenv()
 MONGODB_URL = os.getenv("MONGODB_URL", "mongodb://localhost:27017/")
 DATABASE_NAME = os.getenv("DATABASE_NAME", "kuberi_gold")
 
-# Create MongoDB client
-client = MongoClient(MONGODB_URL)
-db = client[DATABASE_NAME]
+# Lazy-loaded client to avoid connection errors at startup
+_client = None
+_db = None
 
-# Collections
-purchases_collection = db["purchases"]
-chat_history_collection = db["chat_history"]
+
+def _get_client():
+    """Get or create MongoDB client (lazy initialization)."""
+    global _client
+    if _client is None:
+        _client = MongoClient(MONGODB_URL, serverSelectionTimeoutMS=5000)
+    return _client
 
 
 def get_database():
     """Get database instance."""
-    return db
+    global _db
+    if _db is None:
+        _db = _get_client()[DATABASE_NAME]
+    return _db
 
 
 def get_purchases_collection():
     """Get purchases collection."""
-    return purchases_collection
+    return get_database()["purchases"]
 
 
 def get_chat_history_collection():
     """Get chat history collection."""
-    return chat_history_collection
+    return get_database()["chat_history"]
